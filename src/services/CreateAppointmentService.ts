@@ -12,7 +12,7 @@ export default class CreateAppointmentService {
   }: Request): Promise<Result<Appointment>> {
     const appointmentsRepository = getCustomRepository(AppointmentsRepository);
     const appointmentDate = startOfHour(date);
-
+    // It verifies if an appointment is in the same date
     const findAppointmentInSameDate = await appointmentsRepository.findByDate(
       date,
     );
