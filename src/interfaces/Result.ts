@@ -1,4 +1,4 @@
-class Result<T> {
+export default class Result<T> {
   onSuccess?: T;
 
   onError?: Error;
@@ -8,5 +8,3 @@ class Result<T> {
     this.onError = error;
   }
 }
-
-export default Result;

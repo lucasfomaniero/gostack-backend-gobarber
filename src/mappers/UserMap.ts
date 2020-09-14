@@ -1,3 +1,4 @@
+import { UserDTO } from '../dto/UserDTO';
 import User from '../models/User';
 
 export default class UserMap {
@@ -5,7 +6,7 @@ export default class UserMap {
 
   // public static toPersistence(): User{}
 
-  public static toDTO(user: User): any {
+  public static toDTO(user: User): UserDTO {
     return {
       id: user.id,
       name: user.name,
