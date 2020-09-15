@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { getCustomRepository } from 'typeorm';
-import { parseISO, startOfHour } from 'date-fns';
+import { parseISO } from 'date-fns';
 import AppointmentsRepository from '../repository/AppointmentsRepository';
 import CreateAppointmentService from '../services/CreateAppointmentService';
 import ensureAuthenticated from '../middlewares/ensureAuthenticated';
@@ -15,19 +15,23 @@ appointmentsRouter.get('/', async (request, response) => {
 });
 
 appointmentsRouter.post('/', async (request, response) => {
-  const { providerID, date } = request.body;
-  const parsedDate = parseISO(date);
+  try {
+    const { providerID, date } = request.body;
+    const parsedDate = parseISO(date);
 
-  const createAppointment = new CreateAppointmentService();
-  const result = await createAppointment.execute({
-    providerID,
-    date: parsedDate,
-  });
+    const createAppointment = new CreateAppointmentService();
+    const result = await createAppointment.execute({
+      providerID,
+      date: parsedDate,
+    });
 
-  if (result.onSuccess) {
-    return response.status(200).json(result.onSuccess);
+    if (result.onSuccess) {
+      return response.status(200).json(result.onSuccess);
+    }
+    return response.status(400).json({ error: result.onError?.message });
+  } catch (err) {
+    return response.json({ error: err.message });
   }
-  return response.status(400).json({ error: result.onError?.message });
 
   // try {
   //     const { provider, date } = request.body;
