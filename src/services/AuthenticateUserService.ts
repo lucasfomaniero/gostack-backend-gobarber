@@ -4,6 +4,7 @@ import { sign } from 'jsonwebtoken';
 import Result from '../interfaces/Result';
 import User from '../models/User';
 import authConfig from '../config/auth';
+import AppError from '../errors/AppError';
 
 interface Request {
   email: string;
@@ -44,7 +45,7 @@ export default class AuthenticateUserService {
     }
     return new Result<Response>(
       undefined,
-      Error('Incorrect email/password combination.'),
+      new AppError('Incorrect email/password combination.'),
     );
   }
 

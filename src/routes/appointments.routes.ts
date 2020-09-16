@@ -32,17 +32,6 @@ appointmentsRouter.post('/', async (request, response) => {
   } catch (err) {
     return response.json({ error: err.message });
   }
-
-  // try {
-  //     const { provider, date } = request.body;
-  //     const parsedDate = parseISO(date);
-  //     const createAppointment = new createAppointmentService(appointmentsRepository);
-  //     const appointment = createAppointment.execute({provider, date: parsedDate})
-
-  // return response.status(200).json(appointment);
-  // } catch (error) {
-  //     return response.status(400).json({error: error.message});
-  // }
 });
 
 export default appointmentsRouter;
