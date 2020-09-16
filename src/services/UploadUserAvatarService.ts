@@ -17,15 +17,17 @@ export default class UpdateUserAvatarService {
     const userRepository = getRepository(User);
     const foundUser = await userRepository.findOne(userID);
 
+    // Didn't find the user.
     if (!foundUser) {
       return new Result<User>(
         undefined,
         new AppError(
-          'User not found. Only authenticated users can change a avatar',
+          'User not found. Only authenticated users can change an avatar',
         ),
       );
     }
 
+    // Check if the user already has an avatar
     if (foundUser.avatar) {
       // Delete avatar
       // Pede ao node para juntar o nome do arquivo e o caminho de uploadConfig
