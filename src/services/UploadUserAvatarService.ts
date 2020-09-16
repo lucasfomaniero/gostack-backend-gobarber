@@ -27,7 +27,7 @@ export default class UpdateUserAvatarService {
       );
     }
 
-    // Check if the user already has an avatar
+    // Check if the user already has an avatar.
     if (foundUser.avatar) {
       // Delete avatar
       // Pede ao node para juntar o nome do arquivo e o caminho de uploadConfig
