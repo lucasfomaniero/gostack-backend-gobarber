@@ -1,5 +1,5 @@
 import { UserDTO } from '../dto/UserDTO';
-import User from '../models/User';
+import User from '../modules/users/infra/typeorm/entities/User';
 
 export default class UserMap {
   // public static toDomain(): User{}
@@ -11,6 +11,7 @@ export default class UserMap {
       id: user.id,
       name: user.name,
       email: user.email,
+      avatar: user.avatar,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
     };
