@@ -1,10 +1,12 @@
 import { Router } from 'express';
 import multer from 'multer';
-import CreateUserService from '../services/CreateUserService';
-import UserMap from '../mappers/UserMap';
+import CreateUserService from '@modules/users/services/CreateUserService';
+import uploadConfig from '@config/uploadConfig';
+import UpdateUserAvatarService from '@modules/users/services/UpdateUserAvatarService';
+import { container } from 'tsyringe';
+import UserMap from '../../../../../mappers/UserMap';
 import ensureAuthenticated from '../middlewares/ensureAuthenticated';
-import uploadConfig from '../config/uploadConfig';
-import UpdateUserAvatarService from '../services/UploadUserAvatarService';
+import UsersRepository from '../../typeorm/repositories/UsersRepository';
 
 const usersRouter = Router();
 const upload = multer(uploadConfig);
@@ -12,8 +14,8 @@ const upload = multer(uploadConfig);
 usersRouter.post('/', async (request, response) => {
   try {
     const { name, email, password } = request.body;
-
-    const service = new CreateUserService();
+    const userRepository = new UsersRepository();
+    const service = new CreateUserService(userRepository);
 
     const savedUser = await service.execute({ name, email, password });
     const user = UserMap.toDTO(savedUser);
@@ -29,7 +31,7 @@ usersRouter.patch(
   ensureAuthenticated,
   upload.single('avatar'),
   async (request, response) => {
-    const service = new UpdateUserAvatarService();
+    const service = container.resolve(UpdateUserAvatarService);
     const result = await service.execute({
       userID: request.user.id,
       filename: request.file.filename,

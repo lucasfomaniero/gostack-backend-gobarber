@@ -1,5 +1,5 @@
 import { UserDTO } from '../dto/UserDTO';
-import User from '../models/User';
+import User from '../modules/users/infra/typeorm/entities/User';
 
 export default class UserMap {
   // public static toDomain(): User{}

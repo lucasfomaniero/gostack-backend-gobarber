@@ -1,21 +1,26 @@
-import { getRepository } from 'typeorm';
 import path from 'path';
 import fs from 'fs';
-import AppError from '../errors/AppError';
-import Result from '../interfaces/Result';
-import User from '../models/User';
+import { inject, injectable } from 'tsyringe';
+import AppError from '../../../shared/errors/AppError';
+import Result from '../../../interfaces/Result';
+import User from '../infra/typeorm/entities/User';
 
-import uploadConfig from '../config/uploadConfig';
+import uploadConfig from '../../../config/uploadConfig';
+import IUsersRepository from '../repositories/IUsersRepository';
 
-interface Request {
+interface IRequest {
   userID: string;
   filename: string;
 }
-
+@injectable()
 export default class UpdateUserAvatarService {
-  public async execute({ userID, filename }: Request): Promise<Result<User>> {
-    const userRepository = getRepository(User);
-    const foundUser = await userRepository.findOne(userID);
+  constructor(
+    @inject('UsersRepository')
+    private usersRepository: IUsersRepository,
+  ) {}
+
+  public async execute({ userID, filename }: IRequest): Promise<Result<User>> {
+    const foundUser = await this.usersRepository.findById(userID);
 
     // Didn't find the user.
     if (!foundUser) {
@@ -45,7 +50,7 @@ export default class UpdateUserAvatarService {
 
     foundUser.avatar = filename;
 
-    await userRepository.save(foundUser);
+    await this.usersRepository.save(foundUser);
 
     return new Result<User>(foundUser, undefined);
   }

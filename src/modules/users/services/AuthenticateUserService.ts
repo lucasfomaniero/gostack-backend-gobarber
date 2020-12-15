@@ -1,41 +1,41 @@
-import { getRepository, Repository } from 'typeorm';
 import { compare } from 'bcryptjs';
 import { sign } from 'jsonwebtoken';
-import Result from '../interfaces/Result';
-import User from '../models/User';
-import authConfig from '../config/auth';
-import AppError from '../errors/AppError';
+import authConfig from '@config/auth';
+import AppError from '@shared/errors/AppError';
+import { inject, injectable } from 'tsyringe';
+import Result from '../../../interfaces/Result';
+import User from '../infra/typeorm/entities/User';
+import IUsersRepository from '../repositories/IUsersRepository';
 
-interface Request {
+interface IRequest {
   email: string;
   password: string;
 }
 
-interface Response {
+interface IResponse {
   user: User;
   token: string;
 }
-
+@injectable()
 export default class AuthenticateUserService {
-  private repository: Repository<User>;
-
   private user?: User;
 
-  constructor() {
-    this.repository = getRepository(User);
-  }
+  constructor(
+    @inject('UsersRepository')
+    private usersRepository: IUsersRepository,
+  ) {}
 
   public async execute({
     email,
     password,
-  }: Request): Promise<Result<Response>> {
-    const foundUser = await this.repository.findOne({ where: { email } });
+  }: IRequest): Promise<Result<IResponse>> {
+    const foundUser = await this.usersRepository.findByEmail(email);
     if (
       foundUser &&
       (await this.isValidPassword(password, foundUser.password))
     ) {
       this.user = foundUser;
-      return new Result<Response>(
+      return new Result<IResponse>(
         {
           user: this.user,
           token: this.generateToken(),
@@ -44,7 +44,7 @@ export default class AuthenticateUserService {
       );
     }
 
-    return new Result<Response>(
+    return new Result<IResponse>(
       undefined,
       new AppError('Incorrect email/password combination.'),
     );
