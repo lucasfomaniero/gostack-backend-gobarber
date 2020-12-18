@@ -1,6 +1,6 @@
 import AuthenticateUserService from '@modules/users/services/AuthenticateUserService';
 import { Request, Response } from 'express';
-import UserMap from 'mappers/UserMap';
+import UserMap from '@modules/users/mappers/UserMap';
 import { container } from 'tsyringe';
 
 export default class SessionController {

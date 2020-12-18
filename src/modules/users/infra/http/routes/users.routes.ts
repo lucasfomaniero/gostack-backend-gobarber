@@ -4,7 +4,7 @@ import CreateUserService from '@modules/users/services/CreateUserService';
 import uploadConfig from '@config/uploadConfig';
 import UpdateUserAvatarService from '@modules/users/services/UpdateUserAvatarService';
 import { container } from 'tsyringe';
-import UserMap from '../../../../../mappers/UserMap';
+import UserMap from '../../../mappers/UserMap';
 import ensureAuthenticated from '../middlewares/ensureAuthenticated';
 import UsersRepository from '../../typeorm/repositories/UsersRepository';
 
