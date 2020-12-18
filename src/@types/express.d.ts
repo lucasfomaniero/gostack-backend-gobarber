@@ -1,7 +1,9 @@
 declare namespace Express {
-  export interface Request {
+  export interface IRequest {
     user: {
       id: string;
     };
   }
 }
+
+declare module '*.json';

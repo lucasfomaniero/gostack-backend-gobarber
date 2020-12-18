@@ -2,7 +2,7 @@ import path from 'path';
 import fs from 'fs';
 import { inject, injectable } from 'tsyringe';
 import AppError from '../../../shared/errors/AppError';
-import Result from '../../../interfaces/Result';
+import Result from '../../../shared/interfaces/Result';
 import User from '../infra/typeorm/entities/User';
 
 import uploadConfig from '../../../config/uploadConfig';
