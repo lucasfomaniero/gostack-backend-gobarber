@@ -2,6 +2,7 @@ import ICreateAppointmentDTO from '@modules/appointments/dtos/ICreateAppointment
 import Appointment from '@modules/appointments/infra/typeorm/entities/Appointment';
 import { v4 as uuid } from 'uuid';
 import { isEqual } from 'date-fns';
+import AppError from '@shared/errors/AppError';
 import IAppointmentsRepository from '../IAppointmentsRepository';
 
 class FakeAppointmentsRepository implements IAppointmentsRepository {
