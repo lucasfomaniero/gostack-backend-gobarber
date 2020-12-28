@@ -19,16 +19,14 @@ export default class UpdateUserAvatarService {
     private usersRepository: IUsersRepository,
   ) {}
 
-  public async execute({ userID, filename }: IRequest): Promise<Result<User>> {
+  public async execute({ userID, filename }: IRequest): Promise<User> {
     const foundUser = await this.usersRepository.findById(userID);
 
     // Didn't find the user.
     if (!foundUser) {
-      return new Result<User>(
-        undefined,
-        new AppError(
-          'User not found. Only authenticated users can change an avatar',
-        ),
+      throw new AppError(
+        'User not found. Only authenticated users can change an avatar',
+        400,
       );
     }
 
@@ -52,6 +50,6 @@ export default class UpdateUserAvatarService {
 
     await this.usersRepository.save(foundUser);
 
-    return new Result<User>(foundUser, undefined);
+    return foundUser;
   }
 }

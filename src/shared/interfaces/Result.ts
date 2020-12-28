@@ -1,9 +1,11 @@
+import AppError from '@shared/errors/AppError';
+
 export default class Result<T> {
   onSuccess?: T;
 
-  onError?: Error;
+  onError?: AppError;
 
-  constructor(type?: T, error?: Error) {
+  constructor(type?: T, error?: AppError) {
     this.onSuccess = type;
     this.onError = error;
   }
