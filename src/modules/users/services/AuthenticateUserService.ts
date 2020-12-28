@@ -1,11 +1,10 @@
-import { compare } from 'bcryptjs';
 import { sign } from 'jsonwebtoken';
 import authConfig from '@config/auth';
 import AppError from '@shared/errors/AppError';
 import { inject, injectable } from 'tsyringe';
-import Result from '../../../shared/interfaces/Result';
 import User from '../infra/typeorm/entities/User';
 import IUsersRepository from '../repositories/IUsersRepository';
+import IHashProvider from '../providers/HashProvider/Models/IHashProvider';
 
 interface IRequest {
   email: string;
@@ -23,38 +22,37 @@ export default class AuthenticateUserService {
   constructor(
     @inject('UsersRepository')
     private usersRepository: IUsersRepository,
+    @inject('HashProvider')
+    private hashProvider: IHashProvider,
   ) {}
 
-  public async execute({
-    email,
-    password,
-  }: IRequest): Promise<Result<IResponse>> {
+  public async execute({ email, password }: IRequest): Promise<IResponse> {
     const foundUser = await this.usersRepository.findByEmail(email);
-    if (
-      foundUser &&
-      (await this.isValidPassword(password, foundUser.password))
-    ) {
-      this.user = foundUser;
-      return new Result<IResponse>(
-        {
-          user: this.user,
-          token: this.generateToken(),
-        },
-        undefined,
-      );
+
+    if (!foundUser) {
+      throw new AppError('Invalid password/email combination');
     }
 
-    return new Result<IResponse>(
-      undefined,
-      new AppError('Incorrect email/password combination.'),
+    const matchedPassword = await this.isValidPassword(
+      password,
+      foundUser.password,
     );
+
+    if (!matchedPassword) {
+      throw new AppError('Invalid password/email combination');
+    }
+    this.user = foundUser;
+    return {
+      user: this.user,
+      token: this.generateToken(),
+    };
   }
 
   private async isValidPassword(
     password: string,
     cryptPassword: string,
   ): Promise<boolean> {
-    return compare(password, cryptPassword);
+    return this.hashProvider.compareHash(password, cryptPassword);
   }
 
   private generateToken(): string {
