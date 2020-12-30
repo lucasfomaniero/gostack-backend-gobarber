@@ -68,7 +68,21 @@ describe('User Authentication ', () => {
     expect(
       authenticateUser.execute({
         email: 'johndoe@gmail.com',
-        password: '',
+        password: '1234567',
+      }),
+    ).rejects.toBeInstanceOf(AppError);
+  });
+  it('should not be able to login with invalid account', async () => {
+    const fakeUsersRepository = new FakeUsersRepository();
+    const hashProvider = new FakeHashProvider();
+    const authenticateUser = new AuthenticateUserService(
+      fakeUsersRepository,
+      hashProvider,
+    );
+    expect(
+      authenticateUser.execute({
+        email: 'johndoe@gmail.com',
+        password: '1234567',
       }),
     ).rejects.toBeInstanceOf(AppError);
   });
