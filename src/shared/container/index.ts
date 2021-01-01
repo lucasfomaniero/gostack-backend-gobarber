@@ -4,6 +4,8 @@ import AppointmentsRepository from '@modules/appointments/infra/typeorm/reposito
 import IUsersRepository from '@modules/users/repositories/IUsersRepository';
 import UsersRepository from '@modules/users/infra/typeorm/repositories/UsersRepository';
 import '@modules/users/providers';
+import IStorageProvider from './Providers/StorageProvider/Models/IStorageProvider';
+import DiskStorageProvider from './Providers/StorageProvider/Implementations/DiskStorageProvider';
 
 container.registerSingleton<IAppointmentsRepository>(
   'AppointmentsRepository',
@@ -13,4 +15,9 @@ container.registerSingleton<IAppointmentsRepository>(
 container.registerSingleton<IUsersRepository>(
   'UsersRepository',
   UsersRepository,
+);
+
+container.registerSingleton<IStorageProvider>(
+  'Storageprovider',
+  DiskStorageProvider,
 );
