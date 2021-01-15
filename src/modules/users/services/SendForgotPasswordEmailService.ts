@@ -2,18 +2,21 @@ import IMailProvider from '@shared/container/Providers/MailProvider/Models/IFake
 import AppError from '@shared/errors/AppError';
 import { inject, injectable } from 'tsyringe';
 import IUsersRepository from '../repositories/IUsersRepository';
+import IUserTokensRepository from '../repositories/IUserTokensRepository';
 
 interface IRequest {
   email: string;
 }
 
 @injectable()
-class ForgotPasswordEmailService {
+class SendForgotPasswordEmailService {
   constructor(
     @inject('UsersRepository')
     private usersRepository: IUsersRepository,
     @inject('MailProvider')
     private mailProvider: IMailProvider,
+    @inject('UserToken')
+    private userToken: IUserTokensRepository,
   ) {}
 
   public async execute({ email }: IRequest): Promise<void> {
@@ -23,6 +26,8 @@ class ForgotPasswordEmailService {
       throw new AppError('Invalid e-mail address. Please try again.');
     }
 
+    await this.userToken.generate(foundUser.id);
+
     await this.mailProvider.sendMail(
       email,
       'Seguem as instruções para recuperar a senha.',
@@ -30,4 +35,4 @@ class ForgotPasswordEmailService {
   }
 }
 
-export default ForgotPasswordEmailService;
+export default SendForgotPasswordEmailService;
