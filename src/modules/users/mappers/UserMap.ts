@@ -14,6 +14,7 @@ export default class UserMap {
       avatar: user.avatar,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
+      password: user.password,
     };
   }
 }

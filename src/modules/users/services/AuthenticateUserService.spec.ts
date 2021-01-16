@@ -4,16 +4,22 @@ import FakeHashProvider from '../providers/HashProvider/Fakes/FakeHashProvider';
 import AuthenticateUserService from './AuthenticateUserService';
 import CreateUserService from './CreateUserService';
 
+let fakeUsersRepository: FakeUsersRepository;
+let hashProvider: FakeHashProvider;
+let authenticateUser: AuthenticateUserService;
+let createUser: CreateUserService;
+
 describe('User Authentication ', () => {
-  it('should be able to login', async () => {
-    const fakeUsersRepository = new FakeUsersRepository();
-    const hashProvider = new FakeHashProvider();
-    const authenticateUser = new AuthenticateUserService(
+  beforeEach(() => {
+    fakeUsersRepository = new FakeUsersRepository();
+    hashProvider = new FakeHashProvider();
+    authenticateUser = new AuthenticateUserService(
       fakeUsersRepository,
       hashProvider,
     );
-    const createUser = new CreateUserService(fakeUsersRepository, hashProvider);
-
+    createUser = new CreateUserService(fakeUsersRepository, hashProvider);
+  });
+  it('should be able to login', async () => {
     const user = await createUser.execute({
       name: 'John Doe',
       email: 'johndoe@gmail.com',
@@ -29,14 +35,6 @@ describe('User Authentication ', () => {
   });
 
   it('should not be able to login with invalid email', async () => {
-    const fakeUsersRepository = new FakeUsersRepository();
-    const hashProvider = new FakeHashProvider();
-    const authenticateUser = new AuthenticateUserService(
-      fakeUsersRepository,
-      hashProvider,
-    );
-    const createUser = new CreateUserService(fakeUsersRepository, hashProvider);
-
     await createUser.execute({
       name: 'John Doe',
       email: 'johndoe@gmail.com',
@@ -51,14 +49,6 @@ describe('User Authentication ', () => {
     ).rejects.toBeInstanceOf(AppError);
   });
   it('should not be able to login with invalid password', async () => {
-    const fakeUsersRepository = new FakeUsersRepository();
-    const hashProvider = new FakeHashProvider();
-    const authenticateUser = new AuthenticateUserService(
-      fakeUsersRepository,
-      hashProvider,
-    );
-    const createUser = new CreateUserService(fakeUsersRepository, hashProvider);
-
     await createUser.execute({
       name: 'John Doe',
       email: 'johndoe@gmail.com',
@@ -73,12 +63,6 @@ describe('User Authentication ', () => {
     ).rejects.toBeInstanceOf(AppError);
   });
   it('should not be able to login with invalid account', async () => {
-    const fakeUsersRepository = new FakeUsersRepository();
-    const hashProvider = new FakeHashProvider();
-    const authenticateUser = new AuthenticateUserService(
-      fakeUsersRepository,
-      hashProvider,
-    );
     expect(
       authenticateUser.execute({
         email: 'johndoe@gmail.com',
