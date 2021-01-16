@@ -7,15 +7,16 @@ import FakeUserTokensRepository from '../repositories/fakes/FakeUserTokensReposi
 import ResetPasswordService from './ResetPasswordService';
 
 let fakeUsersRepository: FakeUsersRepository;
-let resetPassword: ResetPasswordService;
 let fakeUserTokensRepository: FakeUserTokensRepository;
 let fakeHashProvider: IHashProvider;
+let resetPassword: ResetPasswordService;
 
 describe('ResetPassword', () => {
   beforeEach(() => {
     fakeUsersRepository = new FakeUsersRepository();
     fakeUserTokensRepository = new FakeUserTokensRepository();
     fakeHashProvider = new FakeHashProvider();
+
     resetPassword = new ResetPasswordService(
       fakeUsersRepository,
       fakeUserTokensRepository,
@@ -65,7 +66,7 @@ describe('ResetPassword', () => {
       }),
     ).rejects.toBeInstanceOf(AppError);
   });
-  it('should not be able to reset password if passed more than 2 hours', async () => {
+  it('should not be able to reset password if passed more than two hours', async () => {
     const user = await fakeUsersRepository.create({
       name: 'John Doe',
       email: 'johndoe@gmail.com',

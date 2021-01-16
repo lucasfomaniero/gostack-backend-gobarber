@@ -4,21 +4,18 @@ import CreateAppointmentService from '@modules/appointments/services/CreateAppoi
 import AppointmentsRepository from '@modules/appointments/infra/typeorm/repositories/AppointmentsRepository';
 import { container } from 'tsyringe';
 import Appointment from '../../typeorm/entities/Appointment';
-
+// TODO: Method findAllAppointments is different
 export default class AppointmentsController {
   public async create(request: Request, response: Response): Promise<Response> {
     const { providerID, date } = request.body;
     const parsedDate = parseISO(date);
     const createAppointment = container.resolve(CreateAppointmentService);
-    const result = await createAppointment.execute({
+    const appointment = await createAppointment.execute({
       providerID,
       date: parsedDate,
     });
 
-    if (result.onSuccess) {
-      return response.status(200).json(result.onSuccess);
-    }
-    return response.status(400).json({ error: result.onError?.message });
+    return response.json(appointment);
   }
 
   public async findAllAppointments(

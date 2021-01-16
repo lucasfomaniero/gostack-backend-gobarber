@@ -5,4 +5,5 @@ export interface IUserDTO {
   avatar: string;
   createdAt: Date;
   updatedAt: Date;
+  password: string;
 }

@@ -5,15 +5,20 @@ import FakeHashProvider from '../providers/HashProvider/Fakes/FakeHashProvider';
 import CreateUserService from './CreateUserService';
 import UpdateUserAvatarService from './UpdateUserAvatarService';
 
+let fakeUsersRepository: FakeUsersRepository;
+let fakeStorageProvider: FakeStorageProvider;
+let updateUserAvatar: UpdateUserAvatarService;
+
 describe('Update User Avatar', () => {
-  it('should be able to upload an user avatar', async () => {
-    const fakeUsersRepository = new FakeUsersRepository();
-    const fakeStorageProvider = new FakeStorageProvider();
-    const updateUserAvatar = new UpdateUserAvatarService(
+  beforeEach(() => {
+    fakeUsersRepository = new FakeUsersRepository();
+    fakeStorageProvider = new FakeStorageProvider();
+    updateUserAvatar = new UpdateUserAvatarService(
       fakeUsersRepository,
       fakeStorageProvider,
     );
-
+  });
+  it('should be able to upload an user avatar', async () => {
     const user = await fakeUsersRepository.create({
       name: 'John Doe',
       email: 'johndoe@gmail.com',
@@ -27,13 +32,6 @@ describe('Update User Avatar', () => {
     expect(user.avatar).toBe('avatar.jpg');
   });
   it('should not be able to change an avatar without an account', async () => {
-    const fakeUsersRepository = new FakeUsersRepository();
-    const fakeStorageProvider = new FakeStorageProvider();
-    const updateUserAvatar = new UpdateUserAvatarService(
-      fakeUsersRepository,
-      fakeStorageProvider,
-    );
-
     expect(
       updateUserAvatar.execute({
         avatarFileName: 'avatar.jpg',
@@ -42,13 +40,6 @@ describe('Update User Avatar', () => {
     ).rejects.toBeInstanceOf(AppError);
   });
   it('should be able to change an user avatar', async () => {
-    const fakeUsersRepository = new FakeUsersRepository();
-    const fakeStorageProvider = new FakeStorageProvider();
-    const updateUserAvatar = new UpdateUserAvatarService(
-      fakeUsersRepository,
-      fakeStorageProvider,
-    );
-
     // Learning Jest spyOn
     const deleteFile = jest.spyOn(fakeStorageProvider, 'deleteFile');
 
