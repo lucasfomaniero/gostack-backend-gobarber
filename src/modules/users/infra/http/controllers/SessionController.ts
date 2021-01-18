@@ -8,20 +8,23 @@ export default class SessionsController {
     const { email, password } = request.body;
 
     const authenticateUser = container.resolve(AuthenticateUserService);
+    try {
+      const { user, token } = await authenticateUser.execute({
+        email,
+        password,
+      });
 
-    const { user, token } = await authenticateUser.execute({
-      email,
-      password,
-    });
+      const userWithoutPassword = {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+      };
 
-    const userWithoutPassword = {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt,
-    };
-
-    return response.json({ user: userWithoutPassword, token });
+      return response.json({ user: userWithoutPassword, token });
+    } catch (error) {
+      return response.json('Invalid email password combination');
+    }
   }
 }
