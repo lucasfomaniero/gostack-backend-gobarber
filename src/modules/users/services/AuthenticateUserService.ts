@@ -30,7 +30,7 @@ export default class AuthenticateUserService {
     const foundUser = await this.usersRepository.findByEmail(email);
 
     if (!foundUser) {
-      throw new Error('Invalid password/email combination');
+      throw new AppError('Invalid password/email combination');
     }
 
     const matchedPassword = await this.isValidPassword(
@@ -39,7 +39,7 @@ export default class AuthenticateUserService {
     );
 
     if (!matchedPassword) {
-      throw new Error('Invalid password/email combination');
+      throw new AppError('Invalid password/email combination');
     }
     this.user = foundUser;
     return {
