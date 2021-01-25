@@ -25,8 +25,8 @@
     ],
     "rules": {
       "class-methods-use-this":"off",
-      "@typescript-eslint/camel-case": "off",
       "no-useless-constructor": "off",
+      "@typescript-eslint/camelcase": "off",
       "@typescript-eslint/naming-convention": [
         "error",
         {

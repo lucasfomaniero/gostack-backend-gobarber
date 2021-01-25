@@ -7,12 +7,14 @@ import Appointment from '../../typeorm/entities/Appointment';
 // TODO: Method findAllAppointments is different
 export default class AppointmentsController {
   public async create(request: Request, response: Response): Promise<Response> {
+    const userID = request.user.id;
     const { providerID, date } = request.body;
     const parsedDate = parseISO(date);
     const createAppointment = container.resolve(CreateAppointmentService);
     const appointment = await createAppointment.execute({
       providerID,
       date: parsedDate,
+      userID,
     });
 
     return response.json(appointment);
