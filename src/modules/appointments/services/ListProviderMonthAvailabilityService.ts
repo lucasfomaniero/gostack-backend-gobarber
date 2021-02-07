@@ -1,7 +1,8 @@
-import { getDate, getDaysInMonth } from 'date-fns';
+import { getDate, getDaysInMonth, isAfter, isEqual, isSameDay } from 'date-fns';
 import { inject, injectable } from 'tsyringe';
+import Appointment from '../infra/typeorm/entities/Appointment';
 import IAppointmentsRepository from '../repositories/IAppointmentsRepository';
-
+// :TODO - Correct this file to pass the test
 interface IRequest {
   providerID: string;
   month: number;
@@ -34,7 +35,7 @@ export default class ListProviderMonthAvailabilityService {
     );
 
     const numberOfDaysInMonth = getDaysInMonth(new Date(year, month - 1));
-
+    const currentDate = new Date();
     const eachDayArray = Array.from(
       {
         length: numberOfDaysInMonth,
@@ -45,12 +46,32 @@ export default class ListProviderMonthAvailabilityService {
       const appointmentsInDay = appointments.filter(appointment => {
         return getDate(appointment.date) === day;
       });
-
+      const formattedDate = new Date(year, month - 1, day);
       return {
         day,
-        available: appointmentsInDay.length < 10,
+        available:
+          appointmentsInDay.length < 10 &&
+          (this.isAfterToday(formattedDate, currentDate) ||
+            this.isTodayWithAvailableSpots(
+              appointmentsInDay,
+              formattedDate,
+              currentDate,
+            )),
       };
     });
     return availability;
+  }
+
+  private isAfterToday(date: Date, today: Date): boolean {
+    return isAfter(date, today);
+  }
+
+  private isTodayWithAvailableSpots(
+    appointments: Appointment[],
+    date: Date,
+    today: Date,
+  ): boolean {
+    console.log('Data:', date, 'Agendamentos no dia: ', appointments.length);
+    return appointments.length < 10 && isSameDay(date, today);
   }
 }
