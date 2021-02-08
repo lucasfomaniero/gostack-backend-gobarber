@@ -1,17 +1,23 @@
 import AppError from '@shared/errors/AppError';
+import FakeNotificationsRepository from '@modules/notifications/repositories/fakes/FakeNotificationsRepository';
+
 import FakeAppointmentsRepository from '../repositories/fakes/FakeAppointmentsRepository';
 import CreateAppointmentService from './CreateAppointmentService';
 
 let fakeAppointmentsRepository: FakeAppointmentsRepository;
 let createAppointment: CreateAppointmentService;
+let fakeNotificationsRepository: FakeNotificationsRepository;
 
 describe('Create Appointment', () => {
   beforeEach(() => {
     fakeAppointmentsRepository = new FakeAppointmentsRepository();
+    fakeNotificationsRepository = new FakeNotificationsRepository();
     createAppointment = new CreateAppointmentService(
       fakeAppointmentsRepository,
+      fakeNotificationsRepository,
     );
   });
+
   it('should be able to create a new appointment', async () => {
     jest.spyOn(Date, 'now').mockImplementationOnce(() => {
       return new Date(2021, 4, 10, 12).getTime();
@@ -93,5 +99,19 @@ describe('Create Appointment', () => {
         userID: 'user-id',
       }),
     ).rejects.toBeInstanceOf(AppError);
+  });
+  it('should send a notification when an appointment is created', async () => {
+    const notificationSend = jest.spyOn(fakeNotificationsRepository, 'create');
+    const date = new Date(2021, 4, 10, 13);
+    await createAppointment.execute({
+      date,
+      providerID: 'provider-id',
+      userID: 'user-id',
+    });
+
+    expect(notificationSend).toBeCalledWith({
+      recipientID: 'provider-id',
+      content: 'Novo agendamento para o dia 10/05/2021 às 13h00',
+    });
   });
 });
