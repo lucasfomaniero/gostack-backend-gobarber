@@ -11,21 +11,29 @@ export default class AppointmentsController {
     const { providerID, date } = request.body;
     const parsedDate = parseISO(date);
     const createAppointment = container.resolve(CreateAppointmentService);
-    const appointment = await createAppointment.execute({
-      providerID,
-      date: parsedDate,
-      userID,
-    });
 
-    return response.json(appointment);
+    try {
+      const appointment = await createAppointment.execute({
+        providerID,
+        date: parsedDate,
+        userID,
+      });
+      return response.json(appointment);
+    } catch (error) {
+      return response.json(error);
+    }
   }
 
   public async findAllAppointments(
     request: Request,
     response: Response,
   ): Promise<Response> {
-    const appointmentsRepository = new AppointmentsRepository();
-    const appointments = await appointmentsRepository.find();
-    return response.status(200).json(appointments);
+    try {
+      const appointmentsRepository = new AppointmentsRepository();
+      const appointments = await appointmentsRepository.find();
+      return response.status(200).json(appointments);
+    } catch (error) {
+      return response.json(error);
+    }
   }
 }
