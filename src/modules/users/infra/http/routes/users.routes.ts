@@ -3,6 +3,7 @@ import multer from 'multer';
 
 import uploadConfig from '@config/uploadConfig';
 
+import { celebrate, Joi, Segments } from 'celebrate';
 import UsersController from '../controllers/UsersController';
 import UserAvatarController from '../controllers/UserAvatarController';
 
@@ -18,6 +19,14 @@ usersRouter.post('/', usersController.create);
 
 usersRouter.patch(
   '/avatar',
+  celebrate({
+    [Segments.BODY]: {
+      name: Joi.string().required(),
+      email: Joi.string().email().required(),
+      password: Joi.string().required(),
+    },
+  }),
+
   ensureAuthenticated,
   upload.single('avatar'),
   userAvatarController.update,
