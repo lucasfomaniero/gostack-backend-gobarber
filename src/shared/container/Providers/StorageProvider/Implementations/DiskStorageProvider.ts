@@ -18,11 +18,10 @@ class DiskStorageProvider implements IStorageProvider {
 
     try {
       fs.promises.stat(filePath);
+      await fs.promises.unlink(filePath);
     } catch (error) {
-      return;
+      console.log(error);
     }
-
-    await fs.promises.unlink(filePath);
   }
 }
 

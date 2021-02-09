@@ -15,10 +15,8 @@ const userAvatarController = new UserAvatarController();
 
 const upload = multer(uploadConfig);
 
-usersRouter.post('/', usersController.create);
-
-usersRouter.patch(
-  '/avatar',
+usersRouter.post(
+  '/',
   celebrate({
     [Segments.BODY]: {
       name: Joi.string().required(),
@@ -26,7 +24,11 @@ usersRouter.patch(
       password: Joi.string().required(),
     },
   }),
+  usersController.create,
+);
 
+usersRouter.patch(
+  '/avatar',
   ensureAuthenticated,
   upload.single('avatar'),
   userAvatarController.update,
