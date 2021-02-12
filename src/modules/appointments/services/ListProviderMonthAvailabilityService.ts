@@ -71,7 +71,6 @@ export default class ListProviderMonthAvailabilityService {
     date: Date,
     today: Date,
   ): boolean {
-    console.log('Data:', date, 'Agendamentos no dia: ', appointments.length);
     return appointments.length < 10 && isSameDay(date, today);
   }
 }

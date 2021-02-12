@@ -1,7 +1,10 @@
 import { container } from 'tsyringe';
 import '@modules/users/providers';
+import './Providers';
+
 import IAppointmentsRepository from '@modules/appointments/repositories/IAppointmentsRepository';
 import AppointmentsRepository from '@modules/appointments/infra/typeorm/repositories/AppointmentsRepository';
+
 import IUsersRepository from '@modules/users/repositories/IUsersRepository';
 import UsersRepository from '@modules/users/infra/typeorm/repositories/UsersRepository';
 
@@ -10,15 +13,6 @@ import UserTokensRepository from '@modules/users/infra/typeorm/repositories/User
 
 import INotificationsRepository from '@modules/notifications/repositories/INotificationsRepository';
 import NotificationsRepository from '@modules/notifications/infra/typeorm/repositories/NotificationsRepository';
-
-import IStorageProvider from './Providers/StorageProvider/Models/IStorageProvider';
-import DiskStorageProvider from './Providers/StorageProvider/Implementations/DiskStorageProvider';
-
-import IMailProvider from './Providers/MailProvider/Models/IMailProvider';
-import EtherealMailProvider from './Providers/MailProvider/Implementations/EtherealMailProvider';
-
-import IMailTemplateProvider from './Providers/MailTemplateProvider/models/IMailTemplateProvider';
-import HandlebarsMailTemplateProvider from './Providers/MailTemplateProvider/implementations/HandlebarsMailTemplateProvider';
 
 container.registerSingleton<IAppointmentsRepository>(
   'AppointmentsRepository',
@@ -33,21 +27,6 @@ container.registerSingleton<IUsersRepository>(
 container.registerSingleton<IUserTokensRepository>(
   'UserToken',
   UserTokensRepository,
-);
-
-container.registerSingleton<IStorageProvider>(
-  'StorageProvider',
-  DiskStorageProvider,
-);
-
-container.registerSingleton<IMailTemplateProvider>(
-  'MailTemplateProvider',
-  HandlebarsMailTemplateProvider,
-);
-
-container.registerInstance<IMailProvider>(
-  'MailProvider',
-  container.resolve(EtherealMailProvider),
 );
 
 container.registerSingleton<INotificationsRepository>(

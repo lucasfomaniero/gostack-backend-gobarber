@@ -1,3 +1,4 @@
+import uploadConfig from '@config/uploadConfig';
 import { Exclude, Expose } from 'class-transformer';
 import {
   Entity,
@@ -33,9 +34,17 @@ class User {
 
   @Expose({ name: 'avatar_url' })
   getAvatarURL(): string | null {
-    return this.avatar
-      ? `${process.env.APP_API_URL}/files/${this.avatar}`
-      : null;
+    if (!this.avatar) {
+      return null;
+    }
+    switch (process.env.STORAGE_DRIVER) {
+      case 'disk':
+        return `${process.env.APP_API_URL}/files/${this.avatar}`;
+      case 's3':
+        return `https://${uploadConfig.config.aws.bucket}.s3.amazonaws.com/${this.avatar}`;
+      default:
+        return null;
+    }
   }
 }
 
