@@ -28,8 +28,6 @@ export default class ListProviderService {
       if (!users) {
         throw new AppError('User not found.', 400);
       }
-
-      console.log('A query no banco foi feita');
     }
     await this.cacheProvider.save(key, users);
     return users;
