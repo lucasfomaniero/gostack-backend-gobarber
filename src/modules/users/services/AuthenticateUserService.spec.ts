@@ -2,12 +2,10 @@ import FakeUsersRepository from '@modules/users/repositories/fakes/FakeUsersRepo
 import AppError from '@shared/errors/AppError';
 import FakeHashProvider from '../providers/HashProvider/Fakes/FakeHashProvider';
 import AuthenticateUserService from './AuthenticateUserService';
-import CreateUserService from './CreateUserService';
 
 let fakeUsersRepository: FakeUsersRepository;
 let hashProvider: FakeHashProvider;
 let authenticateUser: AuthenticateUserService;
-let createUser: CreateUserService;
 
 describe('User Authentication ', () => {
   beforeEach(() => {
@@ -17,10 +15,9 @@ describe('User Authentication ', () => {
       fakeUsersRepository,
       hashProvider,
     );
-    createUser = new CreateUserService(fakeUsersRepository, hashProvider);
   });
   it('should be able to login', async () => {
-    const user = await createUser.execute({
+    const user = await fakeUsersRepository.create({
       name: 'John Doe',
       email: 'johndoe@gmail.com',
       password: '123456',
@@ -35,7 +32,7 @@ describe('User Authentication ', () => {
   });
 
   it('should not be able to login with invalid email', async () => {
-    await createUser.execute({
+    await fakeUsersRepository.create({
       name: 'John Doe',
       email: 'johndoe@gmail.com',
       password: '123456',
@@ -49,7 +46,7 @@ describe('User Authentication ', () => {
     ).rejects.toBeInstanceOf(AppError);
   });
   it('should not be able to login with invalid password', async () => {
-    await createUser.execute({
+    await fakeUsersRepository.create({
       name: 'John Doe',
       email: 'johndoe@gmail.com',
       password: '123456',

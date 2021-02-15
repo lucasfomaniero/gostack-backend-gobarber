@@ -1,15 +1,19 @@
 import FakeUsersRepository from '@modules/users/repositories/fakes/FakeUsersRepository';
-import AppError from '@shared/errors/AppError';
-import { useContainer } from 'typeorm';
+import FakeCacheProvider from '@shared/container/Providers/CacheProvider/fakes/FakeCacheProvider';
 import ListProviderService from './ListProviderService';
 
 let fakeUsersRepository: FakeUsersRepository;
 let listProviderService: ListProviderService;
+let fakeCacheProvider: FakeCacheProvider;
 
 describe('ShowProfileService', () => {
   beforeEach(() => {
     fakeUsersRepository = new FakeUsersRepository();
-    listProviderService = new ListProviderService(fakeUsersRepository);
+    fakeCacheProvider = new FakeCacheProvider();
+    listProviderService = new ListProviderService(
+      fakeUsersRepository,
+      fakeCacheProvider,
+    );
   });
   it('should be able to list the providers excepting the user id', async () => {
     const user1 = await fakeUsersRepository.create({
