@@ -1,4 +1,11 @@
-import { getDate, getDaysInMonth, isAfter, isEqual, isSameDay } from 'date-fns';
+import {
+  getDate,
+  getDaysInMonth,
+  getHours,
+  isAfter,
+  isEqual,
+  isSameDay,
+} from 'date-fns';
 import { inject, injectable } from 'tsyringe';
 import Appointment from '../infra/typeorm/entities/Appointment';
 import IAppointmentsRepository from '../repositories/IAppointmentsRepository';
@@ -71,6 +78,10 @@ export default class ListProviderMonthAvailabilityService {
     date: Date,
     today: Date,
   ): boolean {
-    return appointments.length < 10 && isSameDay(date, today);
+    // return appointments.length < 10 && isSameDay(date, today);
+    const currentHour = getHours(today);
+    return (
+      isSameDay(date, today) && appointments.length < 10 && currentHour < 17
+    );
   }
 }
