@@ -3,11 +3,9 @@ import {
   getDaysInMonth,
   getHours,
   isAfter,
-  isEqual,
   isSameDay,
 } from 'date-fns';
 import { inject, injectable } from 'tsyringe';
-import Appointment from '../infra/typeorm/entities/Appointment';
 import IAppointmentsRepository from '../repositories/IAppointmentsRepository';
 // :TODO - Correct this file to pass the test
 interface IRequest {

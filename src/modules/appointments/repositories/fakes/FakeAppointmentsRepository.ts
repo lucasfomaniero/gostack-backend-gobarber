@@ -2,10 +2,8 @@ import ICreateAppointmentDTO from '@modules/appointments/dtos/ICreateAppointment
 import Appointment from '@modules/appointments/infra/typeorm/entities/Appointment';
 import { v4 as uuid } from 'uuid';
 import { getMonth, getYear, isEqual, getDate } from 'date-fns';
-import AppError from '@shared/errors/AppError';
 import IFindAllInMonthFromProviderDTO from '@modules/appointments/dtos/IFindAllInMonthFromProviderDTO';
 import IFindAllInDayFromProviderDTO from '@modules/appointments/dtos/IFindAllInDayFromProviderDTO';
-import { String } from 'aws-sdk/clients/appstream';
 import IAppointmentsRepository from '../IAppointmentsRepository';
 
 class FakeAppointmentsRepository implements IAppointmentsRepository {
