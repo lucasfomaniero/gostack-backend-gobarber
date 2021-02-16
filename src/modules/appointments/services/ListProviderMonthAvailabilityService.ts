@@ -50,6 +50,7 @@ export default class ListProviderMonthAvailabilityService {
       (_, index) => index + 1,
     );
     const availability = eachDayArray.map(day => {
+      // const compareDate = new Date(year, month - 1 , day, 23, 59, 59)
       const appointmentsInDay = appointments.filter(appointment => {
         return getDate(appointment.date) === day;
       });
@@ -58,12 +59,9 @@ export default class ListProviderMonthAvailabilityService {
         day,
         available:
           appointmentsInDay.length < 10 &&
+          // (this.isAfterToday(formattedDate, compareDate) ||this.isTodayWithAvailableSpots(formattedDate, currentDate))
           (this.isAfterToday(formattedDate, currentDate) ||
-            this.isTodayWithAvailableSpots(
-              appointmentsInDay,
-              formattedDate,
-              currentDate,
-            )),
+            this.isTodayWithAvailableSpots(formattedDate, currentDate)),
       };
     });
     return availability;
@@ -73,15 +71,8 @@ export default class ListProviderMonthAvailabilityService {
     return isAfter(date, today);
   }
 
-  private isTodayWithAvailableSpots(
-    appointments: Appointment[],
-    date: Date,
-    today: Date,
-  ): boolean {
-    // return appointments.length < 10 && isSameDay(date, today);
+  private isTodayWithAvailableSpots(date: Date, today: Date): boolean {
     const currentHour = getHours(today);
-    return (
-      isSameDay(date, today) && appointments.length < 10 && currentHour < 17
-    );
+    return isSameDay(date, today) && currentHour < 17;
   }
 }

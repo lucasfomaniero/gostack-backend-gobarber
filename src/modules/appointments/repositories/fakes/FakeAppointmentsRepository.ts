@@ -5,6 +5,7 @@ import { getMonth, getYear, isEqual, getDate } from 'date-fns';
 import AppError from '@shared/errors/AppError';
 import IFindAllInMonthFromProviderDTO from '@modules/appointments/dtos/IFindAllInMonthFromProviderDTO';
 import IFindAllInDayFromProviderDTO from '@modules/appointments/dtos/IFindAllInDayFromProviderDTO';
+import { String } from 'aws-sdk/clients/appstream';
 import IAppointmentsRepository from '../IAppointmentsRepository';
 
 class FakeAppointmentsRepository implements IAppointmentsRepository {
@@ -21,9 +22,14 @@ class FakeAppointmentsRepository implements IAppointmentsRepository {
     return appointment;
   }
 
-  public async findByDate(date: Date): Promise<Appointment | undefined> {
+  public async findByDate(
+    date: Date,
+    providerID: string,
+  ): Promise<Appointment | undefined> {
     const findAppointment = this.appointments.find(appointment => {
-      return isEqual(appointment.date, date);
+      return (
+        isEqual(appointment.date, date) && appointment.providerID === providerID
+      );
     });
     return findAppointment;
   }
