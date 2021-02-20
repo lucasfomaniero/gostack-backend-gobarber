@@ -14,8 +14,8 @@ export default {
 
   defaults: {
     from: {
-      email: 'seu@email.com',
-      name: 'Seu Nome',
+      email: 'contact@lucasmaniero.dev',
+      name: '[GoBarber] Recuperação de senha',
     },
   },
 } as IMailConfig;
