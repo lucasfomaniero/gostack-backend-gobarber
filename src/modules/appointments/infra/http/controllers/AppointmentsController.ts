@@ -1,9 +1,7 @@
-import { parseISO } from 'date-fns';
 import { Request, Response } from 'express';
 import CreateAppointmentService from '@modules/appointments/services/CreateAppointmentService';
 import AppointmentsRepository from '@modules/appointments/infra/typeorm/repositories/AppointmentsRepository';
 import { container } from 'tsyringe';
-import Appointment from '../../typeorm/entities/Appointment';
 // TODO: Method findAllAppointments is different
 export default class AppointmentsController {
   public async create(request: Request, response: Response): Promise<Response> {

@@ -13,7 +13,9 @@ class AppointmentsRepository implements IAppointmentsRepository {
   }
 
   public async find(): Promise<Appointment[]> {
-    const foundAppointments = await this.ormRepository.find();
+    const foundAppointments = await this.ormRepository.find({
+      relations: ['user'],
+    });
     return foundAppointments;
   }
 
