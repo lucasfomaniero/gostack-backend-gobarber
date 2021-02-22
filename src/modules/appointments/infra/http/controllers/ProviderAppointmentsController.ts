@@ -21,9 +21,7 @@ export default class ProviderAppointmentsController {
       });
       return response.json(classToClass(appointments));
     } catch (error) {
-      return response
-        .status(404)
-        .json({ message: 'Failed to fetch appointments. Please try again' });
+      return response.status(404).json(error);
     }
   }
 }
