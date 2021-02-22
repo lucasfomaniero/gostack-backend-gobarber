@@ -3,6 +3,7 @@ import User from '@modules/users/infra/typeorm/entities/User';
 import IUsersRepository from '@modules/users/repositories/IUsersRepository';
 import AppError from '@shared/errors/AppError';
 import ICacheProvider from '@shared/container/Providers/CacheProvider/models/ICacheProvider';
+import { classToClass } from 'class-transformer';
 
 interface IRequest {
   userID?: string;
@@ -29,7 +30,7 @@ export default class ListProviderService {
         throw new AppError('User not found.', 400);
       }
     }
-    await this.cacheProvider.save(key, users);
+    await this.cacheProvider.save(key, classToClass(users));
     return users;
   }
 }
